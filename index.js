@@ -17,7 +17,7 @@ const generateNewCard = (taskData)=>`<div class="col-md-6 col-lg-4">
     <a href="#" class="btn btn-primary">${taskData.taskType}</a>
   </div>
   <div class="card-footer ">
-    <button type="button" class="btn btn-outline-primary float-end">open Task</button>
+    <button type="button" id=${taskData.id} class="btn btn-outline-primary float-end">open Task</button>
 
   </div>
 </div>
@@ -90,7 +90,6 @@ const editCard = (event) => {
   }
   else{
     parentElement = event.target.parentNode.parentNode.parentNode;
-
   }
   let taskTitle = parentElement.childNodes[5].childNodes[1];
   let taskDescription = parentElement.childNodes[5].childNodes[3];
@@ -102,6 +101,44 @@ const editCard = (event) => {
   taskDescription.setAttribute("contenteditable","true");
   taskType.setAttribute("contenteditable","true");
   submitButton.innerHTML = "Save Changes";
+};
+
+const saveEditChanges = (event) =>{
+  event = window.event;
+  const targetID = event.target.id;
+  const tagname = event.target.tagName;
+
+  let parentElement;
+
+  if(tagname==="BUTTON"){
+    parentElemen = event.target.parentNode.parentNode;
+  }
+  else{
+    parentElement = event.target.parentNode.parentNode.parentNode;
+  }
+  let taskTitle = parentElement.childNodes[5].childNodes[1];
+  let taskDescription = parentElement.childNodes[5].childNodes[3];
+  let taskType = parentElement.childNodes[5].childNodes[5];
+  let submitButton = parentElement.childNodes[7].childNodes[1];
+
+  const updatedData = {
+    taskTitle: taskTitle.innerHTML,
+    taskDescription: taskDescription.innerHTML,
+    taskType: taskType.innerHTML,
+    };
+    globalStore = globalStore.map((task) =>{
+      if(task.id===targetID){
+        return {
+          id: task.id,
+          imageUrl: task.imageUrl,
+          taskTitle: updatedData.taskTitle,
+          taskType: updatedData.taskType,
+          taskDescription: updatedData.taskDescription,
+        };
+      }
+      return task;
+    });
+    localStorage();
 };
 
 //issues
